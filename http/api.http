@@ -1,0 +1,11 @@
+### 티켓 생성
+GET http://localhost:8080/ticket/autoCreateTicket
+Content-Type: application/json
+
+### 티켓 예매
+POST http://localhost:8080/ticket
+Content-Type: application/json
+
+{
+  "ticketId": 1
+}
