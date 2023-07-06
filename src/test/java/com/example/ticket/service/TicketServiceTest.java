@@ -27,7 +27,7 @@ class TicketServiceTest {
 
     private Long id1 = null;
     private Long id2 = null;
-    private Integer maxCount = 100;
+    private final Integer maxCount = 100;
 
     @BeforeEach
     public void before() {
