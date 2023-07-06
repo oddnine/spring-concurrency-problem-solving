@@ -22,6 +22,7 @@ public class ReserveTicketProducer {
 
             kafkaTemplate.send("reserve_ticket", jsonObject);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
