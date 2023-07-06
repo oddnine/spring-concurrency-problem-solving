@@ -59,6 +59,14 @@ public class TicketController {
         return ResponseEntity.ok("티켓 예약 신청 완료");
     }
 
+    // step 4) 레디스 분산 락을 사용해서 레디스에서 잔여 표 확인 및 카운팅 후 카프카 메시징 처리
+    @PostMapping("/kafkaAndRedis")
+    public ResponseEntity<String> reserveTicketWithRedisAndKafkaV2(@RequestBody TicketReserveRequest ticketReserveRequest) throws TicketSoldOutException {
+        log.info("POST " + ticketReserveRequest.getTicketId() + ", " + LocalDateTime.now());
+        ticketReserveRedissonService.sendReserveTicketWithRedisOnKafka(ticketReserveRequest.getTicketId());
+        return ResponseEntity.ok("티켓 예약 신청 완료");
+    }
+
     // 티켓 생성
     @PostMapping
     private ResponseEntity<String> autoCreateTicket(@RequestBody TicketRequest ticketRequest) {

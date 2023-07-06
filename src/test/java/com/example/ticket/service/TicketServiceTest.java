@@ -96,4 +96,25 @@ class TicketServiceTest {
         TicketResponse ticket = ticketService.findById(id1);
         Assertions.assertThat(ticket.getTicketCurrentCount()).isEqualTo(maxCount);
     }
+
+    @Test
+    void 동시성_문제_with_Redis_And_Kafka() throws InterruptedException {
+        int peopleCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        CountDownLatch tt = new CountDownLatch(peopleCount);
+
+        for (int i = 0; i < peopleCount; i++) {
+            executorService.execute(() -> {
+                ticketReserveRedissonService.sendReserveTicketWithRedisOnKafka(id1);
+                tt.countDown();
+            });
+        }
+
+        tt.await();
+
+        Thread.sleep(2000);
+
+        TicketResponse ticket = ticketService.findById(id1);
+        Assertions.assertThat(ticket.getTicketCurrentCount()).isEqualTo(maxCount);
+    }
 }

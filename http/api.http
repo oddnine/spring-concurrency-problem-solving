@@ -30,3 +30,11 @@ Content-Type: application/json
 {
   "ticketId": 1
 }
+
+### 티켓 예매 카프카 & 레디스
+POST http://localhost:8080/ticket/kafkaAndRedis
+Content-Type: application/json
+
+{
+  "ticketId": 1
+}
