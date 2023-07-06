@@ -9,3 +9,19 @@ Content-Type: application/json
 {
   "ticketId": 1
 }
+
+### 티켓 예매 레디스
+POST http://localhost:8080/ticket/redis
+Content-Type: application/json
+
+{
+  "ticketId": 1
+}
+
+### 티켓 예매 카프카
+POST http://localhost:8080/ticket/kafka
+Content-Type: application/json
+
+{
+  "ticketId": 1
+}
