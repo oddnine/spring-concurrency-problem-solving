@@ -19,7 +19,7 @@ public class TicketReserveRedissonService {
     private final TicketService ticketService;
 
     // step 2) redisson 분산 락
-    public void ticketReserve(Long ticketId) {
+    public void reverseTicket(Long ticketId) {
         RLock lock = redissonClient.getLock("ticket-" + ticketId);
 
         try {

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -32,9 +31,9 @@ class TicketServiceTest {
 
     @BeforeEach
     public void before() {
-        TicketRequest ticket1 = new TicketRequest("ticket1", maxCount, 0);
+        TicketRequest ticket1 = new TicketRequest("ticket1", maxCount);
         id1 = ticketService.save(ticket1);
-        TicketRequest ticket2 = new TicketRequest("ticket2", maxCount, 0);
+        TicketRequest ticket2 = new TicketRequest("ticket2", maxCount);
         id2 = ticketService.save(ticket2);
     }
 
@@ -46,7 +45,7 @@ class TicketServiceTest {
 
         for (int i = 0; i < peopleCount; i++) {
             executorService.execute(() -> {
-                ticketService.ticketReserveLock(id1);
+                ticketService.reverseTicketLock(id1);
                 tt.countDown();
             });
         }
@@ -65,8 +64,8 @@ class TicketServiceTest {
 
         for (int i = 0; i < peopleCount; i++) {
             executorService.execute(() -> {
-                ticketReserveRedissonService.ticketReserve(id1);
-                ticketReserveRedissonService.ticketReserve(id2);
+                ticketReserveRedissonService.reverseTicket(id1);
+                ticketReserveRedissonService.reverseTicket(id2);
                 tt.countDown();
             });
         }
@@ -85,7 +84,7 @@ class TicketServiceTest {
 
         for (int i = 0; i < peopleCount; i++) {
             executorService.execute(() -> {
-                ticketKafkaService.sendTicketReserve(id1);
+                ticketKafkaService.sendReserveTicket(id1);
                 tt.countDown();
             });
         }

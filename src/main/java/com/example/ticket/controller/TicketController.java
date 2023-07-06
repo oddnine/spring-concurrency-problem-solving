@@ -2,7 +2,6 @@ package com.example.ticket.controller;
 
 import com.example.ticket.dto.ticket.request.TicketRequest;
 import com.example.ticket.dto.ticket.request.TicketReserveRequest;
-import com.example.ticket.dto.ticket.response.TicketResponse;
 import com.example.ticket.kafka.TicketKafkaService;
 import com.example.ticket.redis.service.TicketReserveRedissonService;
 import com.example.ticket.service.TicketService;
@@ -37,10 +36,10 @@ public class TicketController {
     private final TicketKafkaService ticketKafkaService;
 
     // step 1) 데이터 베이스 락
-    @PostMapping
+    @PostMapping("/lock")
     public ResponseEntity<String> reserveTicket(@RequestBody TicketReserveRequest ticketReserveRequest) throws TicketSoldOutException {
         log.info("POST " + ticketReserveRequest.getTicketId() + ", " + LocalDateTime.now());
-        ticketService.ticketReserveLock(ticketReserveRequest.getTicketId());
+        ticketService.reverseTicketLock(ticketReserveRequest.getTicketId());
         return ResponseEntity.ok("티켓 예약 성공");
     }
 
@@ -48,7 +47,7 @@ public class TicketController {
     @PostMapping("/redis")
     public ResponseEntity<String> reserveTicketWithRedis(@RequestBody TicketReserveRequest ticketReserveRequest) throws TicketSoldOutException {
         log.info("POST " + ticketReserveRequest.getTicketId() + ", " + LocalDateTime.now());
-        ticketReserveRedissonService.ticketReserve(ticketReserveRequest.getTicketId());
+        ticketReserveRedissonService.reverseTicket(ticketReserveRequest.getTicketId());
         return ResponseEntity.ok("티켓 예약 성공");
     }
 
@@ -56,13 +55,14 @@ public class TicketController {
     @PostMapping("/kafka")
     public ResponseEntity<String> reserveTicketWithRedisAndKafka(@RequestBody TicketReserveRequest ticketReserveRequest) throws TicketSoldOutException {
         log.info("POST " + ticketReserveRequest.getTicketId() + ", " + LocalDateTime.now());
-        ticketKafkaService.sendTicketReserve(ticketReserveRequest.getTicketId());
-        return ResponseEntity.ok("티켓 예약 성공");
+        ticketKafkaService.sendReserveTicket(ticketReserveRequest.getTicketId());
+        return ResponseEntity.ok("티켓 예약 신청 완료");
     }
 
-    @GetMapping("/autoCreateTicket")
-    private ResponseEntity<String> autoCreateTicket() {
-        ticketService.save(new TicketRequest("티켓1", 2, 0));
+    // 티켓 생성
+    @PostMapping
+    private ResponseEntity<String> autoCreateTicket(@RequestBody TicketRequest ticketRequest) {
+        ticketService.save(ticketRequest);
         return ResponseEntity.ok("티켓 생성 성공");
     }
 }

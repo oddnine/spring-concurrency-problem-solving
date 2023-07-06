@@ -21,7 +21,7 @@ public class ReserveTicketConsumer {
         try {
             var ticket = objectMapper.readValue(record.value(), TicketReserveRequest.class);
 
-            ticketReserveRedissonService.ticketReserve(ticket.getTicketId());
+            ticketReserveRedissonService.reverseTicket(ticket.getTicketId());
         } catch (Exception e) {
             e.printStackTrace();
         }

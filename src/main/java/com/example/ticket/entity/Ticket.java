@@ -5,9 +5,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
+@DynamicInsert
 @NoArgsConstructor
 public class Ticket {
     @Id
@@ -16,6 +19,7 @@ public class Ticket {
     private Long id;
     private String ticketName;
     private Integer ticketMaxCount;
+    @ColumnDefault("0")
     private Integer ticketCurrentCount;
 
     @Builder

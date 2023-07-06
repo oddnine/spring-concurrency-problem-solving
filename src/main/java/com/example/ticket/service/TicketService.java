@@ -25,7 +25,7 @@ public class TicketService {
         return ticketRepository.save(Ticket.builder()
                 .ticketName(ticketRequest.getTicketName())
                 .ticketMaxCount(ticketRequest.getTicketMaxCount())
-                .ticketCurrentCount(ticketRequest.getTicketCurrentCount()).build()).getId();
+                .build()).getId();
     }
 
     public TicketResponse findById(Long id) {
@@ -48,7 +48,7 @@ public class TicketService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void ticketReserveLock(Long ticketId) {
+    public void reverseTicketLock(Long ticketId) {
         Ticket ticket = entityManager.find(Ticket.class, ticketId, LockModeType.PESSIMISTIC_WRITE);
 
         ticket.currentCountIncrement();

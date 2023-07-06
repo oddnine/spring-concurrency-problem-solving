@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class TicketKafkaService {
     private final ReserveTicketProducer reserveTicketProducer;
 
-    public void sendTicketReserve(Long ticketId) {
+    public void sendReserveTicket(Long ticketId) {
         TicketReserveRequest ticket = new TicketReserveRequest();
         ticket.setTicketId(ticketId);
         reserveTicketProducer.send(ticket);

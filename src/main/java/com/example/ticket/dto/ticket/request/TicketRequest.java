@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class TicketRequest {
     private String ticketName;
     private Integer ticketMaxCount;
-    private Integer ticketCurrentCount;
 }

@@ -1,9 +1,14 @@
 ### 티켓 생성
-GET http://localhost:8080/ticket/autoCreateTicket
+POST http://localhost:8080/ticket
 Content-Type: application/json
 
-### 티켓 예매
-POST http://localhost:8080/ticket
+{
+  "ticketName": "티켓1",
+  "ticketMaxCount": 100
+}
+
+### 티켓 예매 LOCK
+POST http://localhost:8080/ticket/lock
 Content-Type: application/json
 
 {
