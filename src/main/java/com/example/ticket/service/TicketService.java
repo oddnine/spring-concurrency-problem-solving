@@ -11,7 +11,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final StringRedisTemplate stringRedisTemplate;
 
     public Long save(TicketRequest ticketRequest) {
         return ticketRepository.save(Ticket.builder()
@@ -58,7 +56,7 @@ public class TicketService {
         log.info("잔여 티켓: " + (ticket.getTicketMaxCount() - ticket.getTicketCurrentCount()));
     }
 
-    // step 2, 3)
+    // step 2, 3) Redisson, Kafka
     public void reserveTicket(Long ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
 
