@@ -63,7 +63,7 @@ public class TicketController {
     @PostMapping("/kafkaAndRedis")
     public ResponseEntity<String> reserveTicketWithRedisAndKafkaV2(@RequestBody TicketReserveRequest ticketReserveRequest) throws TicketSoldOutException {
         log.info("POST " + ticketReserveRequest.getTicketId() + ", " + LocalDateTime.now());
-        ticketReserveRedissonService.sendReserveTicketWithRedisOnKafka(ticketReserveRequest.getTicketId());
+        ticketKafkaService.sendReserveTicketWithRedis(ticketReserveRequest.getTicketId());
         return ResponseEntity.ok("티켓 예약 신청 완료");
     }
 

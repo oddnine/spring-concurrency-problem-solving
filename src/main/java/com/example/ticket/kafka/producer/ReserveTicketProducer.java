@@ -16,6 +16,7 @@ public class ReserveTicketProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
+    // step 3, 4)
     public void send(TicketReserveRequest ticketRequest) {
         try {
             String jsonObject = objectMapper.writeValueAsString(ticketRequest);

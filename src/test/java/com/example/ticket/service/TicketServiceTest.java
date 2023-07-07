@@ -105,14 +105,14 @@ class TicketServiceTest {
 
         for (int i = 0; i < peopleCount; i++) {
             executorService.execute(() -> {
-                ticketReserveRedissonService.sendReserveTicketWithRedisOnKafka(id1);
+                ticketKafkaService.sendReserveTicketWithRedis(id1);
                 tt.countDown();
             });
         }
 
         tt.await();
 
-        Thread.sleep(2000);
+        Thread.sleep(3000);
 
         TicketResponse ticket = ticketService.findById(id1);
         Assertions.assertThat(ticket.getTicketCurrentCount()).isEqualTo(maxCount);

@@ -4,37 +4,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @Repository
 @RequiredArgsConstructor
 public class TicketRedisRepository {
     private final RedisTemplate<String, String> redisTemplate;
 
     public void createTicket(Long ticketId, int maxCount) {
-        String maxCountKey = "ticket-" + ticketId + "-maxCount";
-        String currentCountKey = "ticket-" + ticketId + "-currentCount";
+        String key = getKey(ticketId);
 
-        redisTemplate.opsForValue().set(maxCountKey, String.valueOf(maxCount));
-        redisTemplate.opsForValue().set(currentCountKey, "0");
+        redisTemplate.opsForValue().set(key, String.valueOf(maxCount));
     }
 
-    public void increaseTicketCount(Long ticketId) {
-        String currentCountKey = "ticket-" + ticketId + "-currentCount";
+    public Long decreaseTicketCount(Long ticketId) {
+        String key = getKey(ticketId);
 
-        redisTemplate.opsForValue().increment(currentCountKey);
+        return redisTemplate.opsForValue().decrement(key);
     }
 
-    public List<Integer> getMaxAndCurrentTicketCount(Long ticketId) {
-        String maxCountKey = "ticket-" + ticketId + "-maxCount";
-        String currentCountKey = "ticket-" + ticketId + "-currentCount";
-
-        return Objects.requireNonNull(redisTemplate.opsForValue().multiGet(Arrays.asList(maxCountKey, currentCountKey)))
-                .stream()
-                .map(value -> value != null ? Integer.parseInt(value) : 0)
-                .collect(Collectors.toList());
+    private String getKey(Long ticketId) {
+        return "ticket-currentCount-" + ticketId;
     }
 }

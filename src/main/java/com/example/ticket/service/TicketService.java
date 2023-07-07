@@ -38,16 +38,14 @@ public class TicketService {
     }
 
     // step 0) 동시성 발생
-//    public TicketResponse reserveTicket(Long ticketId) {
-//        Ticket ticket = ticketRepository.findById(ticketId)
-//                .orElseThrow(TicketNotFoundException::new);
-//
-//        ticket.currentCountIncrement();
-//
-//        log.info("잔여 티켓: " + (ticket.getTicketMaxCount() - ticket.getTicketCurrentCount()));
-//
-//        return TicketResponse.from(ticket);
-//    }
+    public void reserveTicketBasic(Long ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(TicketNotFoundException::new);
+
+        ticket.currentCountIncrement();
+
+        log.info("잔여 티켓: " + (ticket.getTicketMaxCount() - ticket.getTicketCurrentCount()));
+    }
 
     // step 1) Pessimistic Lock: 데이터를 읽거나 수정하기 전에 해당 데이터를 락으로 설정하는 방식
     @PersistenceContext

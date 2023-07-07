@@ -2,6 +2,7 @@ package com.example.ticket.kafka.consumer;
 
 import com.example.ticket.dto.ticket.request.TicketReserveRequest;
 import com.example.ticket.redis.service.TicketReserveRedissonService;
+import com.example.ticket.service.TicketService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReserveTicketConsumer {
     private final TicketReserveRedissonService ticketReserveRedissonService;
+    private final TicketService ticketService;
     private final ObjectMapper objectMapper;
 
+    // step 3, 4)
     @KafkaListener(topics = "reserve_ticket", groupId = "ticket")
     public void consume(ConsumerRecord<String, String> record) {
         try {
